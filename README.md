@@ -123,6 +123,23 @@ Notes
 - The public OSRM server is **for demos only** (rate limits, no uptime guarantee) and the ORS free tier
   is daily-limited — which is why route requests are debounced (500 ms) and cached per pin pair.
 
+### Troubleshooting: "Incompatible Gradle JVM version"
+
+> The project's Gradle version 8.9 is incompatible with the Gradle JVM version 25...
+
+This means Android Studio is trying to **run Gradle itself** on Java 25, but Gradle 8.9 only
+supports Java 8–22 (see the
+[Gradle 8.9 compatibility matrix](https://docs.gradle.org/8.9/userguide/compatibility.html)).
+Gradle can't even start, so sync fails before any build script runs. It is an IDE/environment
+setting, not a problem with the project code — and this project needs JDK 17 anyway (AGP 8.7.3).
+
+**Fix:** **Settings → Build, Execution, Deployment → Build Tools → Gradle → Gradle JDK** → pick
+`jbr-17` (the bundled JetBrains Runtime) or any installed JDK 17 → **Sync Now**. The
+"Change Gradle JDK configuration" link in the error banner opens the same setting.
+
+Command line: point `JAVA_HOME` at a JDK 17 before running Gradle, e.g.
+`export JAVA_HOME=/path/to/jdk-17`.
+
 ---
 
 ## Where to plug things in later
