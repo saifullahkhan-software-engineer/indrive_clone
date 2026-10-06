@@ -1,0 +1,10 @@
+# Copy to local.properties (git-ignored) and adjust. Never commit local.properties.
+#
+# Required by the Android Gradle plugin:
+sdk.dir=/path/to/Android/sdk
+
+# Optional: OpenRouteService API key (https://openrouteservice.org/dev/#/signup).
+# - Leave it out or blank  -> the app uses the public OSRM server, then a Haversine estimate.
+# - Provide a key          -> chain becomes ORS -> OSRM -> Haversine.
+# The in-app Settings screen (rider menu -> Settings) overrides this value at runtime.
+ORS_API_KEY=
