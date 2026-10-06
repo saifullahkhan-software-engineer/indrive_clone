@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -74,6 +75,7 @@ fun SettingsScreen(
     var perKmRate by remember(settings) { mutableStateOf(settings.perKmRate.toEditable()) }
     var minimumFare by remember(settings) { mutableStateOf(settings.minimumFare.toEditable()) }
     var maxMultiplier by remember(settings) { mutableStateOf(settings.maxFareMultiplier.toEditable()) }
+    var fareStep by remember(settings) { mutableStateOf(settings.fareStep) }
     var orsKey by remember(settings) { mutableStateOf(settings.orsApiKey) }
     var revealKey by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -129,14 +131,35 @@ fun SettingsScreen(
                     supporting = "The slider's ceiling is the suggested fare × this value (1x or more).",
                 )
 
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "Fare step", style = LabelTextStyle)
+                    Spacer(Modifier.width(12.dp))
+                    FareStepChip(
+                        step = FareCalculator.DEFAULT_STEP,
+                        selected = fareStep == FareCalculator.DEFAULT_STEP,
+                        onSelect = { fareStep = it },
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    FareStepChip(
+                        step = FareCalculator.COARSE_STEP,
+                        selected = fareStep == FareCalculator.COARSE_STEP,
+                        onSelect = { fareStep = it },
+                    )
+                }
+
                 // Live preview straight from the pure fare function the app uses at runtime.
                 val previewSettings = AdminSettings(
                     baseFare = parseAmount(baseFare) ?: settings.baseFare,
                     perKmRate = parseAmount(perKmRate) ?: settings.perKmRate,
                     minimumFare = parseAmount(minimumFare) ?: settings.minimumFare,
                     maxFareMultiplier = parseAmount(maxMultiplier) ?: settings.maxFareMultiplier,
+                    fareStep = fareStep,
                 )
-                val preview = FareCalculator.bounds(distanceMeters = 5_000.0, settings = previewSettings)
+                val preview = FareCalculator.bounds(
+                    distanceMeters = 5_000.0,
+                    settings = previewSettings,
+                    step = previewSettings.fareStep,
+                )
                 Text(
                     text = "Preview — a 5 km trip would suggest ${formatMoney(preview.suggested)}, " +
                         "and the adjuster would allow ${formatMoney(preview.minimum)}…" +
@@ -171,6 +194,7 @@ fun SettingsScreen(
                                     viewModel.updatePerKmRate(parsedPerKm)
                                     viewModel.updateMinimumFare(parsedMinimum)
                                     viewModel.updateMaxFareMultiplier(parsedMultiplier)
+                                    viewModel.updateFareStep(fareStep)
                                 }
                             }
                         },
@@ -275,6 +299,15 @@ fun SettingsScreen(
             )
         }
     }
+}
+
+@Composable
+private fun FareStepChip(step: Double, selected: Boolean, onSelect: (Double) -> Unit) {
+    FilterChip(
+        selected = selected,
+        onClick = { onSelect(step) },
+        label = { Text(formatMoney(step)) },
+    )
 }
 
 @Composable

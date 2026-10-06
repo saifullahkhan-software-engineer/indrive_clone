@@ -20,6 +20,7 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
             perKmRate = preferences[KEY_PER_KM_RATE] ?: defaults.perKmRate,
             minimumFare = preferences[KEY_MINIMUM_FARE] ?: defaults.minimumFare,
             maxFareMultiplier = preferences[KEY_MAX_FARE_MULTIPLIER] ?: defaults.maxFareMultiplier,
+            fareStep = preferences[KEY_FARE_STEP] ?: defaults.fareStep,
             orsApiKey = preferences[KEY_ORS_API_KEY].orEmpty(),
         )
     }
@@ -37,6 +38,7 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
                 perKmRate = preferences[KEY_PER_KM_RATE] ?: AdminSettings().perKmRate,
                 minimumFare = preferences[KEY_MINIMUM_FARE] ?: AdminSettings().minimumFare,
                 maxFareMultiplier = preferences[KEY_MAX_FARE_MULTIPLIER] ?: AdminSettings().maxFareMultiplier,
+                fareStep = preferences[KEY_FARE_STEP] ?: AdminSettings().fareStep,
                 orsApiKey = preferences[KEY_ORS_API_KEY].orEmpty(),
             )
             val updated = transform(current)
@@ -44,6 +46,7 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
             preferences[KEY_PER_KM_RATE] = updated.perKmRate
             preferences[KEY_MINIMUM_FARE] = updated.minimumFare
             preferences[KEY_MAX_FARE_MULTIPLIER] = updated.maxFareMultiplier
+            preferences[KEY_FARE_STEP] = updated.fareStep
             preferences[KEY_ORS_API_KEY] = updated.orsApiKey.trim()
         }
     }
@@ -57,6 +60,7 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
         private val KEY_PER_KM_RATE = doublePreferencesKey("per_km_rate")
         private val KEY_MINIMUM_FARE = doublePreferencesKey("minimum_fare")
         private val KEY_MAX_FARE_MULTIPLIER = doublePreferencesKey("max_fare_multiplier")
+        private val KEY_FARE_STEP = doublePreferencesKey("fare_step")
         private val KEY_ORS_API_KEY = stringPreferencesKey("ors_api_key")
         private val KEY_ROLE = stringPreferencesKey("user_role")
     }

@@ -10,6 +10,7 @@ import com.example.indriveclone.InDriveApplication
 import com.example.indriveclone.ServiceLocator
 import com.example.indriveclone.data.model.AdminSettings
 import com.example.indriveclone.data.settings.SettingsRepository
+import com.example.indriveclone.domain.fare.FareCalculator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +44,9 @@ class SettingsViewModel(private val settingsRepository: SettingsRepository) : Vi
     fun updateMaxFareMultiplier(value: Double) =
         update { it.copy(maxFareMultiplier = value.coerceIn(MIN_MULTIPLIER, MAX_MULTIPLIER)) }
 
+    /** 5 or 10 — anything else is snapped to the nearer allowed value. */
+    fun updateFareStep(value: Double) = update { it.copy(fareStep = value.snapToAllowedStep()) }
+
     fun updateOrsKey(value: String) = update { it.copy(orsApiKey = value.trim()) }
 
     fun clearOrsKey() {
@@ -62,6 +66,9 @@ class SettingsViewModel(private val settingsRepository: SettingsRepository) : Vi
     private fun update(transform: (AdminSettings) -> AdminSettings) {
         viewModelScope.launch { settingsRepository.updateSettings(transform) }
     }
+
+    private fun Double.snapToAllowedStep(): Double =
+        if (this <= FareCalculator.DEFAULT_STEP) FareCalculator.DEFAULT_STEP else FareCalculator.COARSE_STEP
 
     companion object {
         private const val MIN_MULTIPLIER = 1.0

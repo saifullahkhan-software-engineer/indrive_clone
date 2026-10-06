@@ -112,7 +112,7 @@ interface RideRepository {
 | 4 | **Rider — driver on the way** | Accepted driver card + trip/route summary, cancel option. |
 | 5 | **Driver — open requests** | Open ride requests: pickup, destination, road distance, trip time, rider's fare, plus my offer status if any. |
 | 6 | **Driver — request detail** | Mini map with the stored route polyline, **Accept at rider's fare**, **Counter-offer** (same bounds as the rider's adjuster), list of my offers with pending/accepted/rejected state. |
-| 7 | **Admin settings** | Reachable from the menu, no login. Base fare, per-km rate, minimum fare (50), max fare multiplier (2×), ORS API key (masked input + Clear, hint that empty = public OSRM). Persisted in DataStore. |
+| 7 | **Admin settings** | Reachable from the menu, no login. Base fare, per-km rate, minimum fare (50), max fare multiplier (2×), fare step (5 or 10), ORS API key (masked input + Clear, hint that empty = public OSRM), plus a live fare preview computed by the same pure function the app uses. Persisted in DataStore. |
 
 Shared: top bar with overflow menu → *Settings*, *Switch role*, *Reset demo data*.
 
@@ -185,8 +185,9 @@ maxFare       = max(minimumFare, suggestedFare × maxFareMultiplier)
 bounds        = [minimumFare … maxFare], snapped to a 5 (or 10) step
 ```
 
-- Slider + `−` / `+` buttons move in steps of 5 by default (10 configurable in code), always clamped
-  to `bounds`.
+- Slider + `−` / `+` buttons move in steps of **5** (default) or **10**, whichever the admin picked in
+  the settings screen; values are always clamped to `bounds` and the slider's discrete stops match the
+  step exactly (`FareBounds.sliderSteps`).
 - The suggested fare is shown as a reference label; the driver's counter-offer uses the **same**
   `FareCalculator.bounds(...)`.
 - Bounds for the driver's counter-offer are derived from the ride's stored road distance, not re-routed.

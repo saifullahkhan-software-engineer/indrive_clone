@@ -92,7 +92,7 @@ class DriverRideDetailViewModel(
     /** Keeps the counter-offer inside the current window and defaults it to the rider's fare. */
     private suspend fun refreshBounds() {
         val ride = _uiState.value.ride ?: rideRepository.rideRequest(rideId).first() ?: return
-        val bounds = FareCalculator.boundsFor(ride.suggestedFare, settings)
+        val bounds = FareCalculator.boundsFor(ride.suggestedFare, settings, settings.fareStep)
         _uiState.update { current ->
             val fare = when {
                 !counterTouched -> ride.offeredFare

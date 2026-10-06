@@ -56,6 +56,8 @@ data class AdminSettings(
     val perKmRate: Double = 45.0,
     val minimumFare: Double = 50.0,
     val maxFareMultiplier: Double = 2.0,
+    /** Granularity of the fare adjuster: 5 or 10 (see [com.example.indriveclone.domain.fare.FareCalculator]). */
+    val fareStep: Double = 5.0,
     /** Runtime override of BuildConfig.ORS_API_KEY; blank means "use BuildConfig / no key". */
     val orsApiKey: String = "",
 )

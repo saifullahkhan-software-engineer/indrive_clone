@@ -23,7 +23,7 @@ interface DemoOfferSource {
 class MockDriverFleet(private val random: Random = Random.Default) : DemoOfferSource {
 
     override fun offersFor(ride: RideRequest, settings: AdminSettings): List<NewOffer> {
-        val bounds = FareCalculator.boundsFor(ride.suggestedFare, settings)
+        val bounds = FareCalculator.boundsFor(ride.suggestedFare, settings, settings.fareStep)
         val driverCount = MIN_DRIVERS + random.nextInt(MAX_DRIVERS - MIN_DRIVERS + 1)
 
         return DRIVERS.shuffled(random).take(driverCount).mapIndexed { index, driver ->
@@ -76,6 +76,6 @@ class MockDriverFleet(private val random: Random = Random.Default) : DemoOfferSo
 
         /** Bounds helper re-exported for the driver screens (same window for offers and counters). */
         fun boundsFor(ride: RideRequest, settings: AdminSettings): FareBounds =
-            FareCalculator.boundsFor(ride.suggestedFare, settings)
+            FareCalculator.boundsFor(ride.suggestedFare, settings, settings.fareStep)
     }
 }

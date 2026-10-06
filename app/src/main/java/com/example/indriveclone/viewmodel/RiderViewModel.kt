@@ -270,8 +270,8 @@ class RiderViewModel(
         val pickup = state.pickup?.position ?: return
         val destination = state.destination?.position ?: return
 
-        val suggested = FareCalculator.suggestedFare(route.distanceMeters, settings)
-        val bounds = FareCalculator.boundsFor(suggested, settings)
+        val suggested = FareCalculator.suggestedFare(route.distanceMeters, settings, settings.fareStep)
+        val bounds = FareCalculator.boundsFor(suggested, settings, settings.fareStep)
         val key = pickup to destination
         val isNewTrip = key != fareKey
 

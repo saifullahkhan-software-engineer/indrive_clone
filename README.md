@@ -16,7 +16,7 @@ The full requirements, architecture and design decisions are in **[REQUIREMENTS.
 | **Rider** | Map with the current location (or a default city when permission is denied) → tap the map (or search with Nominatim) to set pickup/destination → draggable pins → debounced road route → road distance + trip time + "Route via …" label → suggested fare with a slider/± adjuster → **Request ride**. |
 | **Offers** | 2–3 mock drivers answer a few seconds later; each card shows name, rating, car, fare and mock ETA. Accept → "driver is on the way"; Decline → the offer is marked rejected. |
 | **Driver** | List of open requests (pickup, destination, road distance, trip time, rider's fare, own bid status) → detail with a mini map of the **stored** polyline → **Accept at rider's fare** or **counter-offer** inside the same fare window. |
-| **Admin settings** | Base fare, per-km rate, minimum fare (50), max fare multiplier (2×) and an optional **OpenRouteService API key** (masked, with Clear). Persisted with DataStore; no login. |
+| **Admin settings** | Base fare, per-km rate, minimum fare (50), max fare multiplier (2×), fare step (5/10) and an optional **OpenRouteService API key** (masked, with Clear), with a live fare preview. Persisted with DataStore; no login. |
 
 Routing falls back automatically: **ORS (only with a key) → OSRM → Haversine estimate**, and the
 provider actually used is shown on the fare panel. The demo therefore works completely offline of any
